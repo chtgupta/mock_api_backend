@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model, model } from 'mongoose'
+import { Schema, Model, model } from 'mongoose'
 
 export type MockModel = {
     name: string,

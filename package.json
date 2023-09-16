@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.ts",
   "scripts": {
-    "start": "nodemon ./dist/main.js"
+    "start": "tsc && node ./dist/index.js"
   },
   "author": "Chahat Gupta",
   "license": "ISC",

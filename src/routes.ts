@@ -1,22 +1,11 @@
-import dotenv from 'dotenv'
-import express, { Request, Response, Application } from 'express'
-import mongoose, { Connection } from 'mongoose'
-import { MockModel, Mock } from './models/mock'
+import express, { Request, Response } from 'express'
+import { Mock, MockModel } from './models/mock'
 import { ApiResponse } from './models/api_response'
-import cors from 'cors';
+import mongoose from 'mongoose'
 
-dotenv.config()
-const app: Application = express()
+const router = express.Router()
 
-mongoose.set("strictQuery", false);
-mongoose.connect(process.env.DB_URL as string)
-const db: Connection = mongoose.connection
-
-app.use(cors())
-app.use(express.urlencoded({extended: true}))
-app.use(express.json())
-
-app.get('/', async (req: Request, res: Response): Promise<void> => {
+router.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
         const mocks: MockModel[] = await Mock.find()
         const response: ApiResponse = ApiResponse.success(mocks)
@@ -27,7 +16,7 @@ app.get('/', async (req: Request, res: Response): Promise<void> => {
     }
 })
 
-app.get('/:id', async (req: Request, res: Response): Promise<void> => {
+router.get('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const mock: MockModel | null = await Mock.findById(req.params.id)
         if (mock != null) {
@@ -43,7 +32,7 @@ app.get('/:id', async (req: Request, res: Response): Promise<void> => {
     }
 })
 
-app.get('/mock/:id', async (req: Request, res: Response): Promise<void> => {
+router.get('/mock/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const mock: MockModel | null = await Mock.findById(req.params.id)
         if (mock != null) {
@@ -58,7 +47,7 @@ app.get('/mock/:id', async (req: Request, res: Response): Promise<void> => {
     }
 })
 
-app.post('/', async (req: Request, res: Response): Promise<void> => {
+router.post('/', async (req: Request, res: Response): Promise<void> => {
 
     const data = new Mock({
         name: req.body.name,
@@ -74,11 +63,11 @@ app.post('/', async (req: Request, res: Response): Promise<void> => {
     }
 })
 
-app.put('/:id', async (req: Request, res: Response): Promise<void> => {
+router.put('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
 
-        const newName: string | null = req.body.name;
-        const newResponse: string | null = req.body.response;
+        const newName: string | null = req.body.name
+        const newResponse: string | null = req.body.response
 
         const query: mongoose.UpdateQuery<MockModel> = { name: newName, response: newResponse }
 
@@ -97,7 +86,7 @@ app.put('/:id', async (req: Request, res: Response): Promise<void> => {
     }
 })
 
-app.delete('/:id', async (req: Request, res: Response): Promise<void> => {
+router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
 
     try {
         Mock.findByIdAndDelete(req.params.id, null, (deleteError: mongoose.CallbackError) => {
@@ -116,6 +105,5 @@ app.delete('/:id', async (req: Request, res: Response): Promise<void> => {
 
 })
 
-app.listen(process.env.PORT, (): void => {
-    console.log('Server running..')
-})
+module.exports = router
+
