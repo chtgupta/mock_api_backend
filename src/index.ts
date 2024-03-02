@@ -26,6 +26,6 @@ function configureServer(): void {
     app.use('/', routes)
 
     app.listen(process.env.PORT, (): void => {
-        console.log('Server running..')
+        console.log(`Server running on port ${process.env.PORT}..`)
     })
 }
