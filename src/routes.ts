@@ -27,7 +27,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
             res.status(404).json(response)
         }
     } catch (error: unknown) {
-        const response: ApiResponse = ApiResponse.error('An error occured')
+        const response: ApiResponse = ApiResponse.error('An error occurred')
         res.status(500).json(response)
     }
 })
@@ -42,7 +42,7 @@ router.get('/mock/:id', async (req: Request, res: Response): Promise<void> => {
             res.status(404).json(response)
         }
     } catch (error: unknown) {
-        const response: ApiResponse = ApiResponse.error('An error occured')
+        const response: ApiResponse = ApiResponse.error('An error occurred')
         res.status(500).json(response)
     }
 })
