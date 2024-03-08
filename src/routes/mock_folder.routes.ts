@@ -9,8 +9,14 @@ const router = express.Router()
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
+        const root: MockFolderModel = {
+            _id: 'root',
+            parentId: null,
+            name: 'Root'
+        }
         const mockFolders: MockFolderModel[] = await MockFolder.find()
-        const response: ApiResponse = ApiResponse.success(mockFolders.map((e) => MockFolderHelper.toJson(e, null)))
+        const mocks: MockModel[] = await Mock.find({ parentId: null })
+        const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(root, mockFolders, mocks))
         res.status(200).json(response)
     } catch (error: unknown) {
         const response: ApiResponse = ApiResponse.error((error as Error).message)
@@ -22,8 +28,9 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const mockFolder: MockFolderModel | null = await MockFolder.findById(req.params.id)
         if (mockFolder != null) {
+            const subFolders: MockFolderModel[] = await MockFolder.find({ parentId: req.params.id })
             const mocks: MockModel[] = await Mock.find({ parentId: req.params.id })
-            const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(mockFolder, mocks))
+            const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(mockFolder, subFolders, mocks))
             res.status(200).json(response)
         } else {
             const response: ApiResponse = ApiResponse.error(`No document found with id ${req.params.id}`)
@@ -43,7 +50,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
     })
     try {
         const mockFolder: MockFolderModel = await data.save()
-        const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(mockFolder, null), 'Document created')
+        const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(mockFolder), 'Document created')
         res.status(201).json(response)
     } catch (error: unknown) {
         const response: ApiResponse = ApiResponse.error((error as Error).message)
