@@ -4,7 +4,8 @@
   "description": "",
   "main": "main.ts",
   "scripts": {
-    "start": "tsc && node ./dist/index.js"
+    "start": "tsc && node ./dist/index.js",
+    "run": "node ./dist/index.js"
   },
   "author": "Chahat Gupta",
   "license": "ISC",
