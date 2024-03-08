@@ -1,11 +1,17 @@
 import { Schema, Model, model } from 'mongoose'
 
 export type MockModel = {
-    name: string,
+    folderId: string | null
+    name: string
     response: string
 };
 
 const MockSchema: Schema<MockModel> = new Schema<MockModel>({
+    folderId: {
+        type: String,
+        required: false,
+        default: null
+    },
     name: {
         type: String,
         required: true
