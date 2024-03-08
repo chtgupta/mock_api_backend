@@ -46,6 +46,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
 
     const data = new MockFolder({
         _id: new Types.ObjectId(),
+        parentId: req.body.parentId,
         name: req.body.name
     })
     try {
