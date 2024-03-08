@@ -50,6 +50,7 @@ router.get('/mock/:id', async (req: Request, res: Response): Promise<void> => {
 router.post('/', async (req: Request, res: Response): Promise<void> => {
 
     const data = new Mock({
+        folderId: req.body.folderId,
         name: req.body.name,
         response: req.body.response
     })
