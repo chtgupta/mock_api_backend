@@ -1,14 +1,16 @@
 import express, { Request, Response } from 'express'
 import { MockFolder, MockFolderModel } from '../models/mock_folder.model'
 import { ApiResponse } from '../common/api_response'
-import mongoose from 'mongoose'
+import mongoose, {Types} from 'mongoose'
+import {Mock, MockModel} from "../models/mock.model";
+import MockFolderHelper from "../helper/mock_folder.helper";
 
 const router = express.Router()
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
         const mockFolders: MockFolderModel[] = await MockFolder.find()
-        const response: ApiResponse = ApiResponse.success(mockFolders)
+        const response: ApiResponse = ApiResponse.success(mockFolders.map((e) => MockFolderHelper.toJson(e, null)))
         res.status(200).json(response)
     } catch (error: unknown) {
         const response: ApiResponse = ApiResponse.error((error as Error).message)
@@ -20,7 +22,8 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const mockFolder: MockFolderModel | null = await MockFolder.findById(req.params.id)
         if (mockFolder != null) {
-            const response: ApiResponse = ApiResponse.success(mockFolder)
+            const mocks: MockModel[] = await Mock.find({ folderId: req.params.id })
+            const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(mockFolder, mocks))
             res.status(200).json(response)
         } else {
             const response: ApiResponse = ApiResponse.error(`No document found with id ${req.params.id}`)
@@ -35,11 +38,12 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
 router.post('/', async (req: Request, res: Response): Promise<void> => {
 
     const data = new MockFolder({
+        _id: new Types.ObjectId(),
         name: req.body.name
     })
     try {
         const mockFolder: MockFolderModel = await data.save()
-        const response: ApiResponse = ApiResponse.success(mockFolder, 'Document created')
+        const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(mockFolder, null), 'Document created')
         res.status(201).json(response)
     } catch (error: unknown) {
         const response: ApiResponse = ApiResponse.error((error as Error).message)

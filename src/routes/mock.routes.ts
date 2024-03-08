@@ -2,13 +2,15 @@ import express, { Request, Response } from 'express'
 import { Mock, MockModel } from '../models/mock.model'
 import { ApiResponse } from '../common/api_response'
 import mongoose from 'mongoose'
+import MockHelper from "../helper/mock.helper";
+import { Types } from "mongoose";
 
 const router = express.Router()
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
         const mocks: MockModel[] = await Mock.find()
-        const response: ApiResponse = ApiResponse.success(mocks)
+        const response: ApiResponse = ApiResponse.success(mocks.map((e) => MockHelper.toJson(e)))
         res.status(200).json(response)
     } catch (error: unknown) {
         const response: ApiResponse = ApiResponse.error((error as Error).message)
@@ -20,7 +22,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const mock: MockModel | null = await Mock.findById(req.params.id)
         if (mock != null) {
-            const response: ApiResponse = ApiResponse.success(mock)
+            const response: ApiResponse = ApiResponse.success(MockHelper.toJson(mock))
             res.status(200).json(response)
         } else {
             const response: ApiResponse = ApiResponse.error(`No document found with id ${req.params.id}`)
@@ -50,13 +52,14 @@ router.get('/mock/:id', async (req: Request, res: Response): Promise<void> => {
 router.post('/', async (req: Request, res: Response): Promise<void> => {
 
     const data = new Mock({
+        _id: new Types.ObjectId(),
         folderId: req.body.folderId,
         name: req.body.name,
         response: req.body.response
     })
     try {
         const mock: MockModel = await data.save()
-        const response: ApiResponse = ApiResponse.success(mock, 'Document created')
+        const response: ApiResponse = ApiResponse.success(MockHelper.toJson(mock), 'Document created')
         res.status(201).json(response)
     } catch (error: unknown) {
         const response: ApiResponse = ApiResponse.error((error as Error).message)
