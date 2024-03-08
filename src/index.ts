@@ -22,8 +22,13 @@ function configureServer(): void {
     app.use(express.urlencoded({extended: true}))
     app.use(express.json())
 
-    const routes = require('./routes')
-    app.use('/', routes)
+    const mockRoutes = require('./routes/mock.routes')
+    const mockFolderRoutes = require('./routes/mock_folder.routes')
+    const allRoutes = require('./routes/all.routes')
+
+    app.use('/all', allRoutes) // do not move this below '/' else it clashes with /:id
+    app.use('/folder', mockFolderRoutes) // do not move this below '/' else it clashes with /:id
+    app.use('/', mockRoutes)
 
     app.listen(process.env.PORT, (): void => {
         console.log(`Server running on port ${process.env.PORT}..`)

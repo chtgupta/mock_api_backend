@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express'
-import { Mock, MockModel } from './models/mock'
-import { ApiResponse } from './models/api_response'
+import { Mock, MockModel } from '../models/mock.model'
+import { ApiResponse } from '../common/api_response'
 import mongoose from 'mongoose'
 
 const router = express.Router()
