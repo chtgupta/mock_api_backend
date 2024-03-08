@@ -7,6 +7,7 @@ export default class MockFolderHelper {
     static toJson(model: MockFolderModel, folders: MockFolderModel[] | null = null, files: MockModel[] | null = null) : any {
         return {
             id: model._id,
+            parentId: model.parentId,
             name: model.name,
             folders: folders?.map((e) => MockFolderHelper.toJson(e)),
             files: files?.map((e) => MockHelper.toJson(e))

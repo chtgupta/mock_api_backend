@@ -1,4 +1,5 @@
 import { Schema, Model, model } from 'mongoose'
+import Constants from "../common/constants";
 
 export type MockFolderModel = {
     _id: string
@@ -11,7 +12,7 @@ const MockFolderSchema: Schema<MockFolderModel> = new Schema<MockFolderModel>({
     parentId: {
         type: String,
         required: false,
-        default: null
+        default: Constants.rootPath
     },
     name: {
         type: String,

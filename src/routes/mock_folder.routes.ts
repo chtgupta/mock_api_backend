@@ -4,18 +4,19 @@ import { ApiResponse } from '../common/api_response'
 import mongoose, {Types} from 'mongoose'
 import {Mock, MockModel} from "../models/mock.model";
 import MockFolderHelper from "../helper/mock_folder.helper";
+import Constants from "../common/constants";
 
 const router = express.Router()
 
 router.get('/', async (req: Request, res: Response): Promise<void> => {
     try {
         const root: MockFolderModel = {
-            _id: 'root',
+            _id: Constants.rootPath,
             parentId: null,
             name: 'Root'
         }
-        const mockFolders: MockFolderModel[] = await MockFolder.find()
-        const mocks: MockModel[] = await Mock.find({ parentId: null })
+        const mockFolders: MockFolderModel[] = await MockFolder.find({ parentId: Constants.rootPath })
+        const mocks: MockModel[] = await Mock.find({ parentId: Constants.rootPath })
         const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(root, mockFolders, mocks))
         res.status(200).json(response)
     } catch (error: unknown) {
