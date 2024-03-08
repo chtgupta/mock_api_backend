@@ -26,7 +26,6 @@ function configureServer(): void {
     const mockFolderRoutes = require('./routes/mock_folder.routes')
     const allRoutes = require('./routes/all.routes')
 
-    app.use('/all', allRoutes) // do not move this below '/' else it clashes with /:id
     app.use('/folder', mockFolderRoutes) // do not move this below '/' else it clashes with /:id
     app.use('/', mockRoutes)
 
