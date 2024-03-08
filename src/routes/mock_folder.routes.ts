@@ -22,7 +22,7 @@ router.get('/:id', async (req: Request, res: Response): Promise<void> => {
     try {
         const mockFolder: MockFolderModel | null = await MockFolder.findById(req.params.id)
         if (mockFolder != null) {
-            const mocks: MockModel[] = await Mock.find({ folderId: req.params.id })
+            const mocks: MockModel[] = await Mock.find({ parentId: req.params.id })
             const response: ApiResponse = ApiResponse.success(MockFolderHelper.toJson(mockFolder, mocks))
             res.status(200).json(response)
         } else {

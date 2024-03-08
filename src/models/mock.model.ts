@@ -2,14 +2,14 @@ import { Schema, Model, model } from 'mongoose'
 
 export type MockModel = {
     _id: string
-    folderId: string | null
+    parentId: string | null
     name: string
     response: string
 }
 
 const MockSchema: Schema<MockModel> = new Schema<MockModel>({
     _id: Schema.Types.ObjectId,
-    folderId: {
+    parentId: {
         type: String,
         required: false,
         default: null
