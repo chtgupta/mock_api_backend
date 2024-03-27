@@ -90,8 +90,16 @@ router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
                 const response: ApiResponse = ApiResponse.error((deleteError as Error).message)
                 res.status(500).json(response)
             } else {
-                const response: ApiResponse = ApiResponse.success(null, `Document with id ${req.params.id} removed`)
-                res.status(200).json(response)
+                // also delete mocks associated to that folder
+                Mock.deleteMany({ parentId: req.params.id }, (deleteError: mongoose.CallbackError) => {
+                    if (deleteError) {
+                        const response: ApiResponse = ApiResponse.error((deleteError as Error).message)
+                        res.status(500).json(response)
+                    } else {
+                        const response: ApiResponse = ApiResponse.success(null, `Document with id ${req.params.id} removed`)
+                        res.status(200).json(response)
+                    }
+                })
             }
         })
     } catch (error: unknown) {
