@@ -85,28 +85,35 @@ router.put('/:id', async (req: Request, res: Response): Promise<void> => {
 router.delete('/:id', async (req: Request, res: Response): Promise<void> => {
 
     try {
-        MockFolder.findByIdAndDelete(req.params.id, null, (deleteError: mongoose.CallbackError) => {
-            if (deleteError) {
-                const response: ApiResponse = ApiResponse.error((deleteError as Error).message)
-                res.status(500).json(response)
-            } else {
-                // also delete mocks associated to that folder
-                Mock.deleteMany({ parentId: req.params.id }, (deleteError: mongoose.CallbackError) => {
-                    if (deleteError) {
-                        const response: ApiResponse = ApiResponse.error((deleteError as Error).message)
-                        res.status(500).json(response)
-                    } else {
-                        const response: ApiResponse = ApiResponse.success(null, `Document with id ${req.params.id} removed`)
-                        res.status(200).json(response)
-                    }
-                })
-            }
-        })
+        await deleteChildren(req.params.id)
+        const response: ApiResponse = ApiResponse.success(null, `Document with id ${req.params.id} removed`)
+        res.status(200).json(response)
     } catch (error: unknown) {
         const response: ApiResponse = ApiResponse.error((error as Error).message)
         res.status(500).json(response)
     }
 
 })
+
+async function deleteChildren(folderId: string): Promise<void> {
+
+    // deleting folder
+    await MockFolder.findByIdAndDelete(folderId)
+
+    // deleting child files
+    await Mock.deleteMany({ parentId: folderId })
+
+    // getting child folders
+    const childFolders: MockFolderModel[] = await MockFolder.find({ parentId: folderId })
+
+    // deleting child folders
+    await MockFolder.deleteMany({ parentId: folderId })
+
+    // recursively deleting children folder contents
+    for (const childFolder of childFolders) {
+        await deleteChildren(childFolder._id);
+    }
+
+}
 
 module.exports = router
