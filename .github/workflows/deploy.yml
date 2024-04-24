@@ -38,5 +38,5 @@ jobs:
         uses: denoland/deployctl@v1
         with:
           project: "dead-deer-95"
-          entrypoint: "node ../dist/index.js"
-          root: ""
+          entrypoint: "index.js"
+          root: "dist"
