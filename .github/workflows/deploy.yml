@@ -1,9 +1,9 @@
 name: Deploy
 on:
   push:
-    branches: master
+    branches: feature/denoDeploy
   pull_request:
-    branches: master
+    branches: feature/denoDeploy
 
 jobs:
   deploy:
@@ -30,9 +30,6 @@ jobs:
 
       - name: Install step
         run: "npm install"
-
-      - name: Build step
-        run: "tsc"
 
       - name: Upload to Deno Deploy
         uses: denoland/deployctl@v1
