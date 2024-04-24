@@ -116,4 +116,4 @@ async function deleteChildren(folderId: string): Promise<void> {
 
 }
 
-module.exports = router
+export default router

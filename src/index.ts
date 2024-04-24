@@ -1,19 +1,25 @@
-import dotenv from 'dotenv'
+import { load } from "https://deno.land/std@0.223.0/dotenv/mod.ts";
 import express, { Application } from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
+import mockRoutes from "./routes/mock.routes";
+import mockFolderRoutes from "./routes/mock_folder.routes";
 
-configureEnv()
-configureDb()
-configureServer()
+let env: any
+configureEnv().then(function(_) {
+    console.log(typeof _)
+    env = _
+    configureDb()
+    configureServer()
+})
 
-function configureEnv(): void {
-    dotenv.config()
+async function configureEnv() {
+    return await load();
 }
 
 function configureDb() {
     mongoose.set('strictQuery', false)
-    mongoose.connect(process.env.DB_URL as string)
+    mongoose.connect(env.DB_URL as string)
 }
 
 function configureServer(): void {
@@ -22,14 +28,14 @@ function configureServer(): void {
     app.use(express.urlencoded({extended: true}))
     app.use(express.json())
 
-    const mockRoutes = require('./routes/mock.routes')
-    const mockFolderRoutes = require('./routes/mock_folder.routes')
-    const allRoutes = require('./routes/all.routes')
+    // const mockRoutes = require('./routes/mock.routes')
+    // const mockFolderRoutes = require('./routes/mock_folder.routes')
+    // const allRoutes = require('./routes/all.routes')
 
     app.use('/folder', mockFolderRoutes) // do not move this below '/' else it clashes with /:id
     app.use('/', mockRoutes)
 
-    app.listen(process.env.PORT, (): void => {
-        console.log(`Server running on port ${process.env.PORT}..`)
+    app.listen(env.PORT, (): void => {
+        console.log(`Server running on port ${env.PORT}..`)
     })
 }
