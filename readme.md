@@ -1,6 +1,6 @@
-# Mock API Manager
+# MockModel API Manager
 
-Welcome to my hobby project - the Mock API Manager! This TypeScript-based tool simplifies the creation and management of mock APIs for your development and testing needs.
+Welcome to my hobby project - the MockModel API Manager! This TypeScript-based tool simplifies the creation and management of mock APIs for your development and testing needs.
 
 <img width="1440" alt="Screenshot 2023-09-16 at 11 13 59 PM" src="https://github.com/chtgupta/mock_api_backend/assets/22120812/8a5cbab6-bb82-48d5-b1dc-4037367fac94">
 
