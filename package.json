@@ -5,7 +5,8 @@
   "main": "main.ts",
   "scripts": {
     "start": "tsc && node ./dist/index.js",
-    "run": "node ./dist/index.js"
+    "run": "node ./dist/index.js",
+    "denobuild": "deno run --allow-net --allow-read --allow-env --allow-sys --unstable-sloppy-imports ./src/index.ts"
   },
   "author": "Chahat Gupta",
   "license": "ISC",

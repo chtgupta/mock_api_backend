@@ -1,17 +1,11 @@
-import { load } from "https://deno.land/std@0.223.0/dotenv/mod.ts";
 import express, { Application } from 'express'
 import mongoose from 'mongoose'
 import cors from 'cors'
 import mockRoutes from "./routes/mock.routes";
 import mockFolderRoutes from "./routes/mock_folder.routes";
 
-let env: any
-configureEnv().then(function(_) {
-    console.log(typeof _)
-    env = _
-    configureDb()
-    configureServer()
-})
+configureDb()
+configureServer()
 
 async function configureEnv() {
     return await load();
@@ -19,7 +13,7 @@ async function configureEnv() {
 
 function configureDb() {
     mongoose.set('strictQuery', false)
-    mongoose.connect(env.DB_URL as string)
+    mongoose.connect(Deno.env.get('DB_URL') as string)
 }
 
 function configureServer(): void {
@@ -35,7 +29,7 @@ function configureServer(): void {
     app.use('/folder', mockFolderRoutes) // do not move this below '/' else it clashes with /:id
     app.use('/', mockRoutes)
 
-    app.listen(env.PORT, (): void => {
-        console.log(`Server running on port ${env.PORT}..`)
+    app.listen(Deno.env.get('PORT'), (): void => {
+        console.log(`Server running on port ${Deno.env.get('PORT')}..`)
     })
 }
