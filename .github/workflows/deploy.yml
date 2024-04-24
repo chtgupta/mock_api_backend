@@ -39,4 +39,4 @@ jobs:
         with:
           project: "dead-deer-95"
           entrypoint: "index.js"
-          root: "/dist"
+          root: ""
